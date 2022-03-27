@@ -1,6 +1,7 @@
 const fs = require('fs')
 const { getDoujinObj, getDoujinsByArtist, getDoujinsByTag ,home, search } = require('./nhentai')
 const { toPdf } = require(process.cwd() + '/routes/util')
+const listkey = ["Apikey"]
 
 
 async function nhread(req, res) {
@@ -51,19 +52,31 @@ async function nhread(req, res) {
 
 
 async function nhdetail(req, res) {
+	const apikey = req.query.apikey
 	const code = req.query.code
+	if (listkey.includes(apikey)) {
+	if (!apikey) return res.json('Masukan apikey')
 	if (!code) return res.json('Input Parameter code')
 		let obj = await getDoujinObj(code)
 		res.json(obj)
+		} else {
+			res.json('Apikey tidak terdaftar')
+		}
 }
 
 
 async function nhartist(req, res) {
 	const artist = req.query.artist,
+	const apikey = req.query.apikey,
 	page = req.query.page
+	if (listkey.includes(apikey)) {
+	if (!apikey) return res.json('Masukan apikey')
 	if (!artist || !page) return res.json('Input Parameter artist page')
 		let obj = await getDoujinsByArtist(artist, page)
 		res.json(obj)
+		} else {
+			res.json('Apikey tidak terdaftar')
+		}
 }
 
 
